@@ -1,12 +1,13 @@
+# Lab 2: Voice over IP
+# modifications from:
+
 # last edit date: 2016/09/24
 # author: Forec
 # LICENSE
 # Copyright (c) 2015-2017, Forec <forec@bupt.edu.cn>
-
 # Permission to use, copy, modify, and/or distribute this code for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
-
 # THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 # WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -79,7 +80,7 @@ class Audio_Server(threading.Thread):
                 data += conn.recv(136) # add received bytes to data, bufsize=81920
             zframe_data = data[:msg_size] # set to everything in overflowed data up to size of msg
             data = data[msg_size:] # set data to overflow of the overflowed data
-            print(time.time())
+            #print(time.time())
             frame_data=zlib.decompress(zframe_data) # decompress data
             frames = pickle.loads(frame_data) # de-serializing of data
             for frame in frames: # loops through all of the frames
@@ -129,10 +130,10 @@ class Audio_Client(threading.Thread):
                 data = self.stream.read(CHUNK) # blocks until all frames have been recorded
                 frames.append(data) # adds to end of data 
                 senddata = pickle.dumps(frames) # serializes frames
-                print("normal: " + str(len(senddata)))
-                print(time.time())
+                #print("normal: " + str(len(senddata)))
+                #print(time.time())
                 zdata = zlib.compress(senddata,zlib.Z_BEST_COMPRESSION) #compress data: 20-50% compression
-                print("compressed: " + str(len(zdata)))
+                #print("compressed: " + str(len(zdata)))
             try:
                 self.sock.sendall(struct.pack("L", len(zdata)) + zdata) # sends data to server
             except:
